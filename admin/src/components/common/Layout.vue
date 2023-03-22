@@ -218,19 +218,16 @@ export default {
 
   .el-header {
     height: auto;
-
+    padding: 0;
     .el-page-header {
       border-bottom: rgba(230, 230, 230, 0.8) solid 1px;
     }
-
     border-bottom: rgba(230, 230, 230, 0.8) solid 1px;
-
     .tabList {
-      box-shadow: 0 0px 3px 0 rgba(230, 230, 230, 0.9), 0 0 2px 0 rgba(230, 230, 230, 0.1);
+      box-shadow: 1px 1px 3px 1px rgba(230, 230, 230, 0.9);
       font-weight: bold;
       display: flex;
       overflow: hidden;
-
       .tab {
         margin-right: 8px;
       }
@@ -263,7 +260,6 @@ export default {
     .SideTitle {
       text-align: center;
     }
-
     .el-menu {
       border-right: none;
     }

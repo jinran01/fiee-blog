@@ -165,10 +165,6 @@ export default {
       userInfoId: 0,
       roleList: []
     })
-    // let keywords = reactive({
-    //   loginType:'',
-    //   nickname:''
-    // })
     let state = reactive({
       dialogFormVisible: false, //显示dialog
       bodyWidth: 0,// body宽度
@@ -238,8 +234,8 @@ export default {
         userInfo.roleList.push(item.roleName)
       })
       //获取所有角色
-      getRoles().then(res => {
-        state.roles = res.data
+      getRoles(pageInfo).then(res => {
+        state.roles = res.data.recordList
       })
       state.dialogFormVisible = true;
     }
