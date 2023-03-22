@@ -11,6 +11,7 @@ import locale from 'element-plus/lib/locale/lang/zh-cn'
 import * as echarts from './utils/echarts'
 //引入icon css
 import './assets/icons/blogicon/iconfont.css'
+import './assets/css/global.less'
 
 const app = createApp(App)
 app.config.globalProperties.$echarts = echarts

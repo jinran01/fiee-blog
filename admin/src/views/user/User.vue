@@ -322,4 +322,5 @@ export default {
   margin-right: 7px;
 }
 
+
 </style>

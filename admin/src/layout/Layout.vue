@@ -9,7 +9,6 @@
               class="el-menu-vertical-demo"
               :collapse="isCollapse"
               unique-opened
-
           >
             <h3 class="SideTitle">Fiee 管理系统</h3>
             <template v-for="(item) in menuList">
@@ -45,10 +44,13 @@
       </el-aside>
       <el-container>
         <el-header>
-          <el-page-header title=" ">
+          <el-page-header  style="margin-left: 15px">
+            <template #title >
+              {{ '' }}
+            </template>
             <template #content>
               <el-breadcrumb separator=">" v-if="getBodyWidth >= 667">
-                <el-breadcrumb-item v-for="(item,index) in routeList" :key="$route.fullPath">
+                <el-breadcrumb-item v-for="(item,index) in routeList" :key="$route.fullPath" >
                   {{ item.name }}
                 </el-breadcrumb-item>
               </el-breadcrumb>
@@ -79,8 +81,8 @@
                 </el-dropdown>
               </div>
             </template>
-            <template #icon>
-              <el-icon @click="doOpenOrClose">
+            <template #icon >
+              <el-icon @click="doOpenOrClose" size="20px">
                 <Expand v-if="isCollapse"/>
                 <Fold v-if="!isCollapse"/>
               </el-icon>
@@ -126,7 +128,6 @@ import {logout} from "@/network/admin";
 import {ElMessage} from "element-plus";
 import screenfull from 'screenfull'
 import {removeUser} from "@/network/user";
-
 
 export default {
   name: "Layout",
@@ -248,21 +249,28 @@ export default {
 
   .el-header {
     height: auto;
-
+    padding: 0;
     .el-page-header {
       border-bottom: rgba(230, 230, 230, 0.8) solid 1px;
+      .el-divider{
+        border-left: none;
+        margin: 0;
+      }
     }
 
     border-bottom: rgba(230, 230, 230, 0.8) solid 1px;
 
     .tabList {
-      box-shadow: 0 0px 3px 0 rgba(230, 230, 230, 0.9), 0 0 2px 0 rgba(230, 230, 230, 0.1);
+      box-shadow: 1px 1px 3px 4px rgba(230, 230, 230, 0.9), 0 0 2px 0 rgba(230, 230, 230, 0.1);
       font-weight: bold;
       display: flex;
       overflow: hidden;
-
-      .tab {
-        margin-right: 8px;
+      padding: 2px 0 2px 0;
+      .tab:first-child{
+        margin-left: 15px;
+      }
+      .tab{
+        margin-left: 5px;
       }
     }
   }
@@ -278,6 +286,7 @@ export default {
       border: rgba(220, 220, 220, 1) 1px solid;
       position: relative;
       background-color: #fcfcfc;
+      border-radius: 10px;
     }
   }
 
@@ -314,4 +323,5 @@ export default {
 .iconfont{
   font-size: 20px;
 }
+
 </style>

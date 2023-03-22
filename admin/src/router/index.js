@@ -4,7 +4,7 @@ import store from "@/store";
 
 const Login = () => import("../views/login/Login")
 const Layout = () => import("@/layout/Layout")
-
+const notFound = () => import("@/views/404")
 const routes = [
   {
     path: '/login/:url*',
@@ -14,32 +14,20 @@ const routes = [
   {
     path: "/admin",
     name: "Home",
-    redirect:'/',
+    redirect: {name:'首页'},
     component: Layout,
-  }
-  //     children: [
-  //         {
-  //             path: "/",
-  //             name: "首页",
-  //             component: Index,
-  //         },
-  //         {
-  //             path: "/menus",
-  //             name: "菜单列表",
-  //             component: Menu,
-  //         },
-  //         {
-  //             path: "/users",
-  //             name: "用户列表",
-  //             component: User,
-  //         },
-  //         {
-  //             path: "/online/users",
-  //             name: "在线列表",
-  //             component: OnlineUser,
-  //         }
-  //     ]
-  // },
+
+  },
+  {
+    path:'/404',
+    hidden: true,
+    component:notFound,
+  },
+  // {
+  //   path: '/:url*',
+  //   redirect: '/404',
+  //   hidden: true
+  // }
 ]
 
 const router = createRouter({
@@ -48,6 +36,11 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+
+  // console.log(to.matched)
+  // if (to.matched.length == 0){
+  //   next('/404')
+  // }
   if (localStorage.getItem('userInfo')){
     if (store.state.menuList.length == 0) {
       store.state.menuList = JSON.parse(localStorage.getItem('menuList'))
