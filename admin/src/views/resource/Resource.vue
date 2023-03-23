@@ -30,7 +30,7 @@
             :prefix-icon="Search"
             style="width: 200px;margin-right: 10px"
         />
-        <el-button type="primary" :icon="Search" @click="searchResource"></el-button>
+        <el-button type="primary" :icon="Search" @click="search"></el-button>
       </el-form-item>
     </form>
     <el-table
@@ -54,10 +54,11 @@
         <template #default="scope">
           <el-switch
               v-model="scope.row.isAnonymous"
-              @change="changeHandle(scope.row.id)"
+              @change="changeHandle(scope.row)"
               inline-prompt
               :active-icon="Check"
               :inactive-icon="Close"
+              :disabled="scope.row.parentId == null"
           />
         </template>
       </el-table-column>
@@ -104,11 +105,12 @@
 
 <script>
 import {computed, onMounted, reactive, ref, toRefs} from "vue";
-import {getResource} from "@/network/resource";
+import {getResource, searchResource, updateResources} from "@/network/resource";
 import {ElMessage} from "element-plus";
 import {Check, Close,InfoFilled,Search} from "@element-plus/icons-vue";
 import {formatDate} from "@/common/js/formatDate";
 import store from "@/store";
+
 
 export default {
   name: "Resource",
@@ -120,9 +122,32 @@ export default {
       bodyWidth:0,
       loading:true
     })
+    const search = () => {
+      searchResource(resourceName.value).then(res=>{
+        if (res.flag){
+          tableData.value = res.data
+          tableData.value.map(item=>{
+            item.isAnonymous = item.isAnonymous == 0 ? false : true
+            if (item.children.length > 0){
+              item.children.map(i=>{
+                i.isAnonymous = i.isAnonymous == 0 ? false : true
+              })
+            }
+          })
+        }
+      })
+    }
     //删除资源
     const delResource = (row) => {
       console.log(row)
+    }
+    const doUpdate = (resource) => {
+      resource.isAnonymous = resource.isAnonymous ? 1 : 0
+      updateResources(resource).then(res=>{
+        if (res.flag){
+          search();
+        }
+      })
     }
     //新增资源
     const addResource = (row) => {
@@ -133,8 +158,9 @@ export default {
       console.log(row)
     }
     //更改匿名
-    const changeHandle = (id) => {
-      console.log(id)
+    const changeHandle = (resource) => {
+      doUpdate(resource)
+      console.log(resource)
     }
     //计算body宽度
     const getBodyWidth = computed(()=>{
@@ -148,7 +174,6 @@ export default {
     const getResourceData = () => {
       getResource().then(res=>{
         if (res.flag){
-          console.log(res)
           tableData.value = res.data
           tableData.value.map(item=>{
             item.isAnonymous = item.isAnonymous == 0 ? false : true
@@ -180,6 +205,7 @@ export default {
       addResource,
       updateResource,
       delResource,
+      search,
       resourceName,
       tableData,
       Check,
