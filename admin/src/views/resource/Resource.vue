@@ -19,7 +19,7 @@
             <el-icon>
               <Plus/>
             </el-icon>
-            添加
+            添加模块
           </template>
         </el-button>
       </el-form-item>
@@ -72,11 +72,11 @@
       </el-table-column>
       <el-table-column  label="操作"  fixed="right" :width="getBodyWidth <= 667 ? '170' : ''">
         <template #default="scope">
-          <span class="op" @click="addResource(scope.row)" v-if="scope.row.parentId == null">
+          <span class="op" @click="updateResource(scope.row)" v-if="scope.row.parentId == null">
             <el-icon><Plus /></el-icon>
             新增
           </span>
-          <span class="op" @click="updateResource(scope.row)">
+          <span class="op" @click="scope.row.parentId == null ? addModel(scope.row) : updateResource(scope.row)">
             <el-icon><EditPen /></el-icon>
             修改
           </span>
@@ -87,8 +87,8 @@
               confirm-button-type="danger"
               :icon="InfoFilled"
               icon-color="#626AEF"
-              title="确定要删除该角色吗？"
-              @confirm="delResource(scope.row.id,2)"
+              title="确定要删除该资源吗？"
+              @confirm="delResource(scope.row.id)"
           >
             <template #reference>
               <span class="op">
@@ -100,12 +100,71 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 添加/修改模块 -->
+    <el-dialog v-model="dialogFormVisible_add">
+      <template #header>
+        <el-icon>
+          <el-icon size="15">
+            <Plus />
+          </el-icon>
+        </el-icon>
+        <span style="font-size: 14px;margin-left: 10px">{{flag_model==0 ? '新增模块' : '修改模块'}}</span>
+      </template>
+      <el-form :model="add_form" >
+        <el-form-item label="模块名" >
+          <el-input v-model="add_form.resourceName" autocomplete="off"  />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogFormVisible_add = false">取消</el-button>
+        <el-button type="primary" @click="doAddModel">
+          确定
+        </el-button>
+      </span>
+      </template>
+    </el-dialog>
+    <!-- 添加/修改资源 -->
+    <el-dialog v-model="dialogFormVisible_add_res">
+      <template #header>
+        <el-icon>
+          <el-icon size="15">
+            <Plus />
+          </el-icon>
+        </el-icon>
+        <span style="font-size: 14px;margin-left: 10px">{{ flag_res == 0 ? '新增资源' : '修改资源' }}</span>
+      </template>
+      <el-form :model="add_res_form" >
+        <el-form-item label="资 源 名" >
+          <el-input v-model="add_res_form.resourceName" autocomplete="off"  />
+        </el-form-item>
+        <el-form-item label="资源路径" >
+          <el-input v-model="add_res_form.url" autocomplete="off"  />
+        </el-form-item>
+        <el-form-item label="请求方式" >
+          <el-radio-group v-model="add_res_form.requestMethod">
+            <el-radio label="GET">GET</el-radio>
+            <el-radio label="POST">POST</el-radio>
+            <el-radio label="PUT">PUT</el-radio>
+            <el-radio label="DELETE">DELETE</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogFormVisible_add_res = false">取消</el-button>
+        <el-button type="primary" @click="doAddResource">
+          确定
+        </el-button>
+      </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {computed, onMounted, reactive, ref, toRefs} from "vue";
-import {getResource, searchResource, updateResources} from "@/network/resource";
+import {delResources, getResource, updateResources} from "@/network/resource";
 import {ElMessage} from "element-plus";
 import {Check, Close,InfoFilled,Search} from "@element-plus/icons-vue";
 import {formatDate} from "@/common/js/formatDate";
@@ -118,49 +177,138 @@ export default {
     let tableData = ref([]) //资源数据
     let treeTable = ref(null) //table对象
     let resourceName = ref('') //查询资源名称
+    let resource = reactive({})
     let state = reactive({
       bodyWidth:0,
-      loading:true
+      loading:true,
+      dialogFormVisible_add:false, //添加/修改模块的dialog
+      dialogFormVisible_add_res:false, //添加/修改资源的dialog
+      flag_model:0, //新增/修改模块标志 0为新增 1为修改
+      flag_res:0 //新增/修改资源标志 0为新增 1为修改
     })
+    let add_form = reactive({
+      resourceName:''
+    })
+    let add_res_form = reactive({
+      resourceName:'',
+      requestMethod:'',
+      url:'',
+      id:'',
+      parentId:''
+    })
+    //查找资源
     const search = () => {
-      searchResource(resourceName.value).then(res=>{
+      getResourceData();
+    }
+    //删除资源
+    const delResource = (id) => {
+      delResources(id).then(res=>{
         if (res.flag){
-          tableData.value = res.data
-          tableData.value.map(item=>{
-            item.isAnonymous = item.isAnonymous == 0 ? false : true
-            if (item.children.length > 0){
-              item.children.map(i=>{
-                i.isAnonymous = i.isAnonymous == 0 ? false : true
-              })
-            }
+          ElMessage({
+            type:'success',
+            message:'删除成功'
+          })
+          getResourceData();
+        }else {
+          ElMessage({
+            type:'error',
+            message:res.message
           })
         }
       })
     }
-    //删除资源
-    const delResource = (row) => {
-      console.log(row)
-    }
+    //执行更新操作
     const doUpdate = (resource) => {
-      resource.isAnonymous = resource.isAnonymous ? 1 : 0
       updateResources(resource).then(res=>{
         if (res.flag){
-          search();
+          ElMessage({
+            type:'success',
+            message:'操作成功'
+          })
+          getResourceData();
         }
       })
     }
-    //新增资源
-    const addResource = (row) => {
-      console.log(row)
+    //执行 添加/修改 模块操作
+    const doAddModel = () => {
+      //判断是否为修改
+      if (state.flag_model == 0){
+        //新增
+        doUpdate(add_form)
+      }else {
+        //修改
+        resource.resourceName = add_form.resourceName
+        console.log(resource)
+        // console.log(resource)
+        doUpdate(resource)
+      }
+      getResourceData()
+      state.dialogFormVisible_add = !state.dialogFormVisible_add
     }
-    //更新资源
+    //新增/修改模块
+    const addModel = (row) => {
+      resource = {}
+      add_form.resourceName = ''
+      state.flag_model = 0
+      //判断是否为修改
+      if (row.id != null){
+        state.flag_model = 1
+        resource['isAnonymous'] = row.isAnonymous ? 1 : 0
+        resource['resourceName'] = row.resourceName
+        resource['id'] = row.id
+        resource['parentId'] = row.parentId
+        resource['url'] = row.url
+        add_form.resourceName = row.resourceName
+      }
+      state.dialogFormVisible_add = !state.dialogFormVisible_add
+    }
+    //执行 添加/修改 资源操作
+    const doAddResource = () => {
+      //判断是否为修改
+      if (state.flag_res == 0){
+        //新增
+        let resource = {
+          resourceName:add_res_form.resourceName,
+          requestMethod:add_res_form.requestMethod,
+          url:add_res_form.url,
+          parentId : add_res_form.parentId
+        }
+        doUpdate(resource)
+      }else {
+        //修改
+        doUpdate(add_res_form)
+      }
+      getResourceData()
+      state.dialogFormVisible_add_res = !state.dialogFormVisible_add_res
+    }
+    //更新/新增资源
     const updateResource = (row) => {
-      console.log(row)
+      //设置为空
+      add_res_form.resourceName = ''
+      add_res_form.url = ''
+      add_res_form.requestMethod = ''
+      add_res_form.id = ''
+      add_res_form.parentId = ''
+      state.flag_res = 0
+      //判断是否为修改
+      // console.log(row.parentId == null)
+      if (row.parentId != null){
+        //修改
+        state.flag_res = 1
+        add_res_form.resourceName = row.resourceName
+        add_res_form.url = row.url
+        add_res_form.requestMethod = row.requestMethod
+        add_res_form.id = row.id
+        add_res_form.parentId = row.parentId
+      }else {
+        add_res_form.parentId = row.id
+      }
+      state.dialogFormVisible_add_res = !state.dialogFormVisible_add_res
     }
     //更改匿名
     const changeHandle = (resource) => {
+      resource.isAnonymous = resource.isAnonymous ? 1 : 0
       doUpdate(resource)
-      console.log(resource)
     }
     //计算body宽度
     const getBodyWidth = computed(()=>{
@@ -172,7 +320,7 @@ export default {
     })
     //获取资源数据
     const getResourceData = () => {
-      getResource().then(res=>{
+      getResource(resourceName.value).then(res=>{
         if (res.flag){
           tableData.value = res.data
           tableData.value.map(item=>{
@@ -202,10 +350,14 @@ export default {
       changeHandle,
       formatDate,
       clickRowHandle,
-      addResource,
+      // addResource,
       updateResource,
+      doAddResource,
       delResource,
       search,
+      addModel,
+      doAddModel,
+      add_res_form,
       resourceName,
       tableData,
       Check,
@@ -214,6 +366,7 @@ export default {
       InfoFilled,
       treeTable,
       getBodyWidth,
+      add_form
     }
   }
 
