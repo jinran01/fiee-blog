@@ -16,6 +16,5 @@ export function generaMenu() {
     })
   }
   routerPackage(store.state.menuList)
-  // routerPackage(JSON.parse(localStorage.getItem('menuList')))
 }
 

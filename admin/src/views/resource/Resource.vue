@@ -101,7 +101,7 @@
       </el-table-column>
     </el-table>
     <!-- 添加/修改模块 -->
-    <el-dialog v-model="dialogFormVisible_add">
+    <el-dialog v-model="dialogFormVisible_add" destroy-on-close :width="getBodyWidth < 667 ? '90%' : '50%'">
       <template #header>
         <el-icon>
           <el-icon size="15">
@@ -125,7 +125,7 @@
       </template>
     </el-dialog>
     <!-- 添加/修改资源 -->
-    <el-dialog v-model="dialogFormVisible_add_res">
+    <el-dialog v-model="dialogFormVisible_add_res" destroy-on-close :width="getBodyWidth < 667 ? '90%' : '50%'">
       <template #header>
         <el-icon>
           <el-icon size="15">
@@ -169,7 +169,6 @@ import {ElMessage} from "element-plus";
 import {Check, Close,InfoFilled,Search} from "@element-plus/icons-vue";
 import {formatDate} from "@/common/js/formatDate";
 import store from "@/store";
-
 
 export default {
   name: "Resource",
@@ -394,6 +393,12 @@ export default {
   .el-form-item:last-child {
     margin-right: 7px;
     float: right;
+  }
+}
+.el-dialog{
+  form{
+    width: 80%;
+    margin: 0 auto;
   }
 }
 </style>
