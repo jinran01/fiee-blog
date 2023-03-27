@@ -1,7 +1,7 @@
 // 直接传入原始时间节点
 export function formatDate(time,format) {
   //创建日期对象
-  let date = Date.parse(time) - 3600*1000*8;
+  let date = Date.parse(time);
   date = new Date(date)
   // console.log(date)
   //格式化年份

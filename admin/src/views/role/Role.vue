@@ -441,7 +441,7 @@ export default {
         defaultProps.label = 'resourceName'
         resourceListIds.value = []
         loading.value = true
-        getResource().then(res => {
+        getResource('').then(res => {
           resourceList.value = res.data
         })
         data.resourceIdList.map(item => {
@@ -481,7 +481,7 @@ export default {
     //修改role状态
     const changeHandle = (data) => {
       let role = JSON.parse(JSON.stringify(data))
-      role.isDisable = role.isDisable ? 0 : 1;
+      role.isDisable = role.isDisable ? 1 : 0;
       roleStatus(role).then(res => {
         if (res.code == 20000) {
           ElMessage({

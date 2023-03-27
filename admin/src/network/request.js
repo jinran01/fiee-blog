@@ -11,10 +11,13 @@ export function request(config) {
   );
   //请求拦截
   instance.interceptors.request.use(config => {
-    // const token = window.localStorage.getItem('token')
-    // if(token){
-    //     config.headers.Authorization = 'Bearer '+token;
-    // }
+    const token = window.localStorage.getItem('token')
+    if(token){
+        config.headers.Authorization = 'Bearer '+ token;
+    }else {
+      router.push('/login')
+    }
+    // config.headers.Authorization = 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzM2M4MTk0NmYyNTc0OTA0OWIyNGVkNTgyOWEyZmNmNyIsInN1YiI6IjEiLCJpc3MiOiJzZyIsImlhdCI6MTY3OTkwMzcxNCwiZXhwIjoxNjc5OTA3MzE0fQ.nVdrWWrpQcs4XNsqvU1j24_Ou0vp2FfzaogXJWQvn0w'
     // 直接放行
     return config;
   }, err => {

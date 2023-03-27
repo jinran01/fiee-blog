@@ -49,7 +49,7 @@
               {{ '' }}
             </template>
             <template #content>
-              <el-breadcrumb separator=">" v-if="getBodyWidth >= 667">
+              <el-breadcrumb separator=">" v-if="getBodyWidth > 667">
                 <el-breadcrumb-item v-for="(item,index) in routeList" :key="$route.fullPath" >
                   {{ item.name }}
                 </el-breadcrumb-item>
@@ -147,7 +147,8 @@ export default {
     })
     onMounted(() => {
       menuList.value = store.state.menuList
-      userInfo.value = store.state.userInfo
+      userInfo.value = store.state.userInfo.userInfo
+      // console.log(userInfo.value.userInfo)
       // console.log(menuList.value)
     })
     //全屏模式
