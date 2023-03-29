@@ -61,7 +61,7 @@
                 <span class="welcome">晚上好！</span>
                 <el-dropdown>
                   <el-avatar style="margin-right: 30px"
-                             :src="userInfo.avatar"/>
+                             :src="getAvatar.avatar"/>
                   <template #dropdown>
                     <el-dropdown-menu >
                       <el-dropdown-item >
@@ -148,8 +148,10 @@ export default {
     onMounted(() => {
       menuList.value = store.state.menuList
       userInfo.value = store.state.userInfo.userInfo
-      // console.log(userInfo.value.userInfo)
-      // console.log(menuList.value)
+    })
+    //更新头像
+    const getAvatar = computed(()=>{
+      return store.state.userInfo.userInfo
     })
     //全屏模式
     const doFullScreen = () => {
@@ -234,6 +236,7 @@ export default {
       // handleNodeClick,
       // handleCheckChange,
       // isCached,
+      getAvatar,
       randomType,
       goTo,
       handleClose,

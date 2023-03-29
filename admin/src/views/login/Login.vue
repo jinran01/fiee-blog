@@ -82,7 +82,6 @@ export default {
           store.dispatch("setMenu")
           //存储管理人员信息
           localStorage.setItem("userInfo", JSON.stringify(res.data))
-
           localStorage.setItem("token", res.data.token)
           setTimeout(() => {
             generaMenu();

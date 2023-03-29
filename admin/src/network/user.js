@@ -40,3 +40,28 @@ export function removeUser(userInfoId) {
         param:userInfoId
     })
 }
+
+//获取ossToken
+export function getOssToken() {
+    return request({
+        url:`admin/getOssToken`,
+    })
+}
+
+//修改用户信息
+export function updateUserAvatar(data) {
+    return request({
+        url:`admin/users/avatar`,
+        method:'POST',
+        data
+    })
+}
+
+//修改用户信息
+export function updateUserInfo(data) {
+    return request({
+        url:`admin/users/info`,
+        method:'POST',
+        data
+    })
+}

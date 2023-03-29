@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "echarts": "^5.4.1"
+    "echarts": "^5.4.1",
+    "vue-uuid": "^3.0.0"
   }
 }
