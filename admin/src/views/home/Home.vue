@@ -11,7 +11,7 @@
                 </el-icon>
                 访问量
               </div>
-              <div class="card-count">{{ 2000 }}</div>
+              <div class="card-count">{{ viewsCount }}</div>
             </div>
           </el-card>
         </el-col>
@@ -24,7 +24,7 @@
                 </el-icon>
                 用户量
               </div>
-              <div class="card-count">{{ 2000 }}</div>
+              <div class="card-count">{{ userCount }}</div>
             </div>
           </el-card>
         </el-col>
@@ -37,7 +37,7 @@
                 </el-icon>
                 文章量
               </div>
-              <div class="card-count">{{ 2000 }}</div>
+              <div class="card-count">{{ articleCount }}</div>
             </div>
           </el-card>
         </el-col>
@@ -50,7 +50,7 @@
                 </el-icon>
                 留言量
               </div>
-              <div class="card-count">{{ 2000 }}</div>
+              <div class="card-count">{{ messageCount }}</div>
             </div>
           </el-card>
         </el-col>
@@ -64,16 +64,40 @@
 
 </template>
 <script>
-import {onMounted, onUnmounted} from "vue";
+import {onMounted, onUnmounted, reactive, toRefs} from "vue";
 import echarts from "@/utils/echarts";
 import store from "@/store";
+import {getBlogInfo} from "@/network/home";
+import {ElMessage} from "element-plus";
 
 export default {
   name: "Index",
   setup() {
+    let state = reactive({
+      viewsCount:0,
+      messageCount:0,
+      userCount:0,
+      articleCount:0,
+    })
     onMounted(() => {
       initChart();
+      getBlogHomeInfo();
     })
+    const getBlogHomeInfo = () => {
+      getBlogInfo().then(res=>{
+        if (res.flag){
+          state.viewsCount = res.data.viewsCount
+          state.messageCount = res.data.messageCount
+          state.userCount = res.data.userCount
+          state.articleCount = res.data.articleCount
+        }else {
+          ElMessage({
+            type:'error',
+            message:'出错了'
+          })
+        }
+      })
+    }
     // onUnmounted(() => {
     //   echart.dispose(document.getElementById("viewChart"))
     // })
@@ -127,7 +151,7 @@ export default {
       };
     }
     return {
-
+      ...toRefs(state)
     }
   }
 }

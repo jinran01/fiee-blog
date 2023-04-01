@@ -44,7 +44,6 @@
           </el-form>
         </div>
       </el-tab-pane>
-
       <el-tab-pane name="second">
         <template #label>
           <span>
@@ -293,7 +292,6 @@ export default {
 <style scoped lang="less">
 .setting_tabs {
   padding: 20px;
-
   i {
     margin-right: 5px;
   }
