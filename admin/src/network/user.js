@@ -41,10 +41,10 @@ export function removeUser(userInfoId) {
     })
 }
 
-//获取ossToken
-export function getOssToken() {
+//获取AvatarOssToken
+export function getAvatarOssToken() {
     return request({
-        url:`admin/getOssToken`,
+        url:`admin/getAvatarOssToken`,
     })
 }
 

@@ -94,7 +94,7 @@
 
 <script>
 import {onMounted, reactive, ref} from "vue";
-import {getOssToken, updateUserAvatar, updateUserInfo} from "@/network/user";
+import {getAvatarOssToken, getOssToken, updateUserAvatar, updateUserInfo} from "@/network/user";
 import {v4} from 'uuid'
 import store from "@/store";
 import {ElMessage} from "element-plus";
@@ -140,7 +140,6 @@ export default {
           data.old_password = password.old_password
           data.new_password = password.new_password
           data.confirm_password = password.confirm_password
-          console.log(password)
           updateUserInfo(data).then(res=>{
             if (res.flag){
               ElMessage({
@@ -203,7 +202,7 @@ export default {
         flag = false
       }
       return new Promise((resolve, reject) => {
-        getOssToken().then(res => {
+        getAvatarOssToken().then(res => {
           data.signature = res.data.signature,
               data.policy = res.data.policy,
               data.OSSAccessKeyId = res.data.accessKeyId,
