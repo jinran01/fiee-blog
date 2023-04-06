@@ -142,6 +142,7 @@
                 :on-success="cover_success"
                 class="el-upload_img"
             >
+              <el-image :src="webInfoConfig.articleCover" style="border-radius: 10px"></el-image>
             </el-upload>
           </el-form-item>
           <el-form-item label="邮箱提醒">
@@ -291,7 +292,6 @@ export default {
         })
       })
     }
-    //TODO
     let url = "https://spring-boot-blog-api.oss-cn-hangzhou.aliyuncs.com/"
     //网站头像上传成功回调
     const config_success = () => {
@@ -308,6 +308,7 @@ export default {
     //文章默认封面上传成功回调
     const cover_success = () => {
       webInfoConfig.value.articleCover = url+data.key
+      console.log(webInfoConfig.value.articleCover)
     }
     //微信打赏二维码上传成功回调
     const wechat_success = () => {

@@ -75,7 +75,7 @@
               confirm-button-type="danger"
               :icon="InfoFilled"
               icon-color="#626AEF"
-              title="确定要删除该资源吗？"
+              title="确定要删除该操作日志吗？"
               @confirm="delOperation(scope.row.id,0)"
           >
             <template #reference>
