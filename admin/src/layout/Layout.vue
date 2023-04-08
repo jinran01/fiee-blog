@@ -64,7 +64,7 @@
                              :src="getAvatar.avatar"/>
                   <template #dropdown>
                     <el-dropdown-menu >
-                      <el-dropdown-item >
+                      <el-dropdown-item @click="goToSetting">
                         <el-icon>
                           <Avatar/>
                         </el-icon>
@@ -139,6 +139,10 @@ export default {
     let userInfo = ref({})
     let menuList = ref([])
     let isCollapse = ref(true)
+    const goToSetting = () => {
+      router.push("/setting")
+    }
+    //打开或关闭侧边菜单
     const doOpenOrClose = () => {
       isCollapse.value = isCollapse.value == true ? false : true
     }
@@ -152,6 +156,7 @@ export default {
     //更新头像
     const getAvatar = computed(()=>{
       return store.state.userInfo.userInfo
+      // return userInfo.value
     })
     //全屏模式
     const doFullScreen = () => {
@@ -209,6 +214,8 @@ export default {
             localStorage.removeItem('userInfo')
             //清除菜单
             localStorage.removeItem('menuList')
+            //清除token
+            localStorage.removeItem('token')
             //reset Tabs
             store.commit('resetTab')
             if (result.code == 51000){
@@ -237,6 +244,7 @@ export default {
       // handleCheckChange,
       // isCached,
       getAvatar,
+      goToSetting,
       randomType,
       goTo,
       handleClose,

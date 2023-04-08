@@ -11,22 +11,22 @@ const routes = [
     name: "Login",
     component: Login,
   },
+
   {
     path: "/admin",
     name: "Home",
-    redirect: {name:'首页'},
+    redirect:'/',
     component: Layout,
-
-  },
-  {
-    path:'/404',
-    hidden: true,
-    component:notFound,
   },
   // {
-  //   path: '/:url*',
+  //   path: '/404',
+  //   hidden: true,
+  //   component: notFound,
+  // },
+  // {
+  //   path: '/:pathMatch(.*)',
   //   redirect: '/404',
-  //   hidden: true
+  //   hidden: true,
   // }
 ]
 
@@ -37,11 +37,10 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
 
-  // console.log(to.matched)
-  // if (to.matched.length == 0){
-  //   next('/404')
-  // }
-  if (localStorage.getItem('userInfo')){
+  if (to.path == '/login'){
+    next()
+  }
+  if (store.state.isLogin){
     if (store.state.menuList.length == 0) {
       store.state.menuList = JSON.parse(localStorage.getItem('menuList'))
       generaMenu();
@@ -50,8 +49,7 @@ router.beforeEach((to, from, next) => {
       next();
     }
   }else {
-    next()
+    next('/login')
   }
-
 })
 export default router

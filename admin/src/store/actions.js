@@ -5,6 +5,6 @@ const actions = {
     await getMenuList('').then(res=>{
       commit('setMenu',res.data)
     })
-  }
+  },
 }
 export default actions;

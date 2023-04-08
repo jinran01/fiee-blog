@@ -5,6 +5,7 @@ const state = {
   bodyWidth:document.body.clientWidth,
   menuList:[],
   LOGIN_FLAG:false,
-  userInfo:JSON.parse(localStorage.getItem("userInfo"))
+  userInfo:JSON.parse(localStorage.getItem("userInfo")) || '',
+  isLogin:window.localStorage.getItem("userInfo") ? true : false
 }
 export default state;

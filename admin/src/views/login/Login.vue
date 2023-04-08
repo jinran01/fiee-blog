@@ -82,10 +82,12 @@ export default {
           store.dispatch("setMenu")
           //存储管理人员信息
           localStorage.setItem("userInfo", JSON.stringify(res.data))
+          store.commit('setUserInfo',JSON.parse(localStorage.getItem("userInfo")))
           localStorage.setItem("token", res.data.token)
+          store.commit("setLogin",true)
           setTimeout(() => {
             generaMenu();
-            store.state.LOGIN_FLAG = true
+            // store.state.LOGIN_FLAG = true
             loadingFlag.value = !loadingFlag.value
             router.push("/")
           }, 1000)

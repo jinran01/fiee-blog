@@ -22,6 +22,11 @@ const mutations = {
     state.menuList = data
     localStorage.setItem("menuList",JSON.stringify(data))
   },
-
+  setUserInfo(state,data){
+    state.userInfo = data
+  },
+  setLogin(state,payload){
+    state.isLogin = payload
+  }
 }
 export default mutations
