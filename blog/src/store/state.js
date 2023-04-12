@@ -1,8 +1,6 @@
 const state = {
   drawer:false,
   scrollTop:0,
-  blogInfo: {
-    websiteConfig:''
-  }
+  blogInfo: JSON.parse(localStorage.getItem("blogInfo"))
 }
 export default state;

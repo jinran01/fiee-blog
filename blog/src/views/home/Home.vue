@@ -60,10 +60,9 @@
           <!-- 文章封面图 -->
           <div :class="isRight(index)">
             <router-link :to="'/articles/' + item.id">
-              <v-img
+              <img
                   class="on-hover"
-                  width="100%"
-                  height="100%"
+                  style="width: 100%;height: 100%;"
                   :src="item.articleCover"
               />
             </router-link>
@@ -85,7 +84,7 @@
               </span>
               <!-- 发表时间 -->
               <v-icon size="14">mdi-calendar-month-outline</v-icon>
-              {{ item.createTime | date }}
+              {{ formatDate(item.createTime,"YYYY-MM-dd")}}
               <span class="separator">|</span>
               <!-- 文章分类 -->
               <router-link :to="'/categories/' + item.categoryId">
@@ -112,9 +111,9 @@
           </div>
         </v-card>
         <!-- 无限加载 -->
-<!--        <infinite-loading @infinite="infiniteHandler">-->
-<!--          <div slot="no-more"/>-->
-<!--        </infinite-loading>-->
+        <!--        <infinite-loading @infinite="infiniteHandler">-->
+        <!--          <div slot="no-more"/>-->
+        <!--        </infinite-loading>-->
       </v-col>
       <!-- 博主信息 -->
       <v-col md="3" cols="12" class="d-md-block d-none">
@@ -222,7 +221,7 @@
       </v-col>
     </v-row>
     <!-- 提示消息 -->
-    <v-snackbar v-model="tip" top color="#49b1f5" :timeout="2000">
+    <v-snackbar v-model="tip" color="#49b1f5" :timeout="1000">
       按CTRL+D 键将本页加入书签
     </v-snackbar>
   </div>
@@ -231,8 +230,11 @@
 <script>
 import Swiper from "../../components/Swiper.vue";
 import EasyTyper from "easy-typer-js";
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, toRefs} from "vue";
 import store from "@/store";
+
+import {getArticles} from "@/network/article";
+import {formatDate} from "@/common/js/formatDate";
 
 export default {
   components: {
@@ -254,32 +256,28 @@ export default {
     let blogInfo = store.state.blogInfo
     let articleList = ref([])
     let talkList = ref([])
-    let current = ref(1)
-    const infiniteHandler = ($state) => {
-      let md = require("markdown-it")();
-          this.axios
-            .get("/api/articles", {
-              params: {
-                current: this.current
-              }
-            })
-            .then(({ data }) => {
-              if (data.data.length) {
-                // 去除markdown标签
-                data.data.forEach(item => {
-                  item.articleContent = md
-                    .render(item.articleContent)
-                    .replace(/<\/?[^>]*>/g, "")
-                    .replace(/[|]*\n/, "")
-                    .replace(/&npsp;/gi, "");
-                });
-                this.articleList.push(...data.data);
-                this.current++;
-                $state.loaded();
-              } else {
-                $state.complete();
-              }
-            });
+    let state = reactive({
+      current: 1
+    })
+    const getArticleList = () => {
+      getArticles().then(res => {
+        let md = require("markdown-it")();
+        if (res.flag) {
+          res.data.forEach(item => {
+            item.articleContent = md.render(item.articleContent)
+                .replace(/<\/?[^>]*>/g, "")
+                .replace(/[|]*\n/, "")
+                .replace(/&npsp;/gi, "");
+          })
+          articleList.value = res.data
+        }
+      })
+    }
+    const isRight = (index) => {
+      if (index % 2 == 0) {
+        return "article-cover left-radius";
+      }
+      return "article-cover right-radius";
     }
     const scrollDown = () => {
       window.scrollTo({
@@ -303,41 +301,45 @@ export default {
       const data = obj;
       const typed = new EasyTyper(data, input, null, null);
     }
-    const isShowSocial = () => {
-
+    const isShowSocial = (type) => {
+      return blogInfo.websiteConfig.socialUrlList.indexOf(type) >= 0 ? true : false
     }
+    //计时器
     const runTime = () => {
-
-      var timeold =
+      let timeold =
           new Date().getTime() -
           new Date('2021-01-07').getTime();
-      var msPerDay = 24 * 60 * 60 * 1000;
-      var daysold = Math.floor(timeold / msPerDay);
-      var str = "";
-      var day = new Date();
+      let msPerDay = 24 * 60 * 60 * 1000;
+      let daysold = Math.floor(timeold / msPerDay);
+      let str = "";
+      let day = new Date();
       str += daysold + "天";
       str += day.getHours() + "时";
       str += day.getMinutes() + "分";
       str += day.getSeconds() + "秒";
       time.value = str;
     }
+    //TODO
     let cover = "background: url(" + "https://laravel-shop-api-y.oss-cn-hangzhou.aliyuncs.com/config/c822bd5bd73351ed057d59b5df5217f9.jpg" + ") center center / cover no-repeat";
     onMounted(() => {
-      init();
-      setInterval(runTime, 1000);
+      getArticleList()
+      init()
+      setInterval(runTime, 1000)
     })
     return {
+      ...toRefs(state),
       tip,
       time,
       obj,
       articleList,
       talkList,
-      current,
       blogInfo,
       cover,
+      formatDate,
       isShowSocial,
       scrollDown,
-      infiniteHandler
+      isRight,
+      // infiniteHandler
     }
   }
 
@@ -467,10 +469,13 @@ export default {
   line-height: 40px;
   text-align: center;
   margin: 6px 0 -6px;
-}
-
-.card-info-social a {
-  font-size: 1.5rem;
+  a{
+    font-size: 1.5rem;
+    color: #4c4948;
+  }
+  a:hover{
+    color: #ff763b;
+  }
 }
 
 .left-radius {
@@ -637,10 +642,9 @@ export default {
 .blog-info-data {
   flex: 1;
   text-align: center;
-}
-
-.blog-info-data a {
-  text-decoration: none;
+  a {
+    color: #4c4948;
+  }
 }
 
 .collection-btn {
@@ -679,6 +683,8 @@ export default {
 }
 
 .author-avatar {
+  width: 100%;
+  height: 100%;
   transition: all 0.5s;
 }
 

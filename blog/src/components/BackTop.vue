@@ -12,9 +12,12 @@
 
 <script>
 import {computed, reactive, ref, toRefs, watch} from "vue";
+import {useTheme} from "vuetify";
 
 export default {
   setup() {
+    const theme = useTheme()
+
     const scrollLength = ref(0)
     let state = reactive({
       isShow: '',
@@ -49,7 +52,7 @@ export default {
     const check = () => {
       const flag = state.icon == "iconyueliang";
       state.icon = flag ? "icontaiyang" : "iconyueliang";
-      // vuetify.theme.dark = !vuetify.theme.dark;
+      theme.global.name.value = theme.global.name.value=="dark" ? 'light' : 'dark'
     }
     return {
       ...toRefs(state),
@@ -63,7 +66,7 @@ export default {
 
 <style scoped>
 .rightside {
-  z-index: 9999;
+  z-index: 999;
   position: fixed;
   right: -38px;
   bottom: 85px;
