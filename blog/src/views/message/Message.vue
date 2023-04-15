@@ -1,6 +1,7 @@
 <template>
   <div class="message_main">
     <div class="message_banner" :style="cover">
+      <h1 class="title" style="color:white;">留言板</h1>
       <div class="message-input">
       </div>
       <Barrage></Barrage>
@@ -57,6 +58,13 @@ export default {
 <style scoped lang="less">
 .message_main{
   height: 100%;
+  .title{
+    width: 200px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    top: 30%;
+  }
   .message_banner{
     top: 0;
     left: 0;

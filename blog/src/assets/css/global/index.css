@@ -479,3 +479,14 @@ pre.hljs code {
 #nprogress .bar {
   background:#49b1f5 !important;
 }
+.v-overlay div:first-child{
+  top: 0px;
+  bottom: auto !important;
+}
+.v-overlay__content{
+  top: 0px;
+  bottom: auto;
+}
+.v-snackbar__wrapper{
+  bottom: auto;
+}

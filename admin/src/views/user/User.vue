@@ -179,7 +179,6 @@ export default {
     }
     //查找用户
     const searchUser = () => {
-      console.log(pageInfo.nickname)
       pageInfo.keywords = nickname.value
       getUsers();
     }
