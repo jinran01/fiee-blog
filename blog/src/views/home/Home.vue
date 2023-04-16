@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+
     <!-- banner -->
     <div class="home-banner" :style="cover">
       <div class="banner-container">
@@ -236,6 +237,7 @@ import store from "@/store";
 import {getArticles} from "@/network/article";
 import {formatDate} from "@/common/js/formatDate";
 
+
 export default {
   components: {
     Swiper,
@@ -443,6 +445,7 @@ export default {
 </style>
 
 <style scoped lang="less">
+
 .home-banner {
   position: absolute;
   top: 0px;

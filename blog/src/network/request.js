@@ -3,14 +3,16 @@ import router from "@/router";
 
 
 export function request(config) {
+
   const instance = axios.create(
       {
         baseURL: "/api",
-        timeout: 5000
+        timeout: 5000,
       }
   );
   //请求拦截
   instance.interceptors.request.use(config => {
+
     // const token = window.localStorage.getItem('token')
     // if(token){
     //     config.headers.Authorization = 'Bearer '+ token;
@@ -25,6 +27,7 @@ export function request(config) {
 
   //相应拦截
   instance.interceptors.response.use(res => {
+
     switch (res.data.code) {
       case 40001:
         // ElMessage.error(res.data.message)

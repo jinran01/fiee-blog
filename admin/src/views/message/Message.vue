@@ -94,7 +94,7 @@
               confirm-button-type="danger"
               :icon="InfoFilled"
               icon-color="#626AEF"
-              title="确定要删除该角色吗？"
+              title="确定要删除该留言吗？"
               @confirm="doDelMessage(scope.row.id,2)"
           >
             <template #reference>
@@ -111,7 +111,7 @@
     </el-table>
     <el-pagination
         background
-        :layout="getBodyWidth >= 667 ? 'prev,pager,next' : 'prev,next,jumper'"
+        :layout="getBodyWidth >= 667 ? 'total,prev,pager,next' : 'total,prev,next,jumper'"
         @current-change="pageChange"
         :page-size=pageInfo.size
         :total="count"

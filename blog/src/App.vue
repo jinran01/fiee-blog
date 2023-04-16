@@ -9,6 +9,7 @@
     </v-main>
     <Footer ></Footer>
     <BackTop></BackTop>
+    <Player></Player>
   </v-app>
 </template>
 
@@ -20,15 +21,18 @@ import BackTop from "@/components/BackTop";
 import {onBeforeMount, onMounted, ref} from "vue";
 import store from "@/store";
 import {getHomeInfo} from "@/network/home";
-import {clickEffect} from "@/common/js/onClick";
+import {clickEffect} from "@/common/js/onClick"; //鼠标点击特效
 // import {snow} from "@/common/js/snow";
 import {ElMessage} from "element-plus";
 import SideNavBar from "@/components/layout/SideNavBar";
+import Player from "@/components/zw-player/Player";
+
 
 export default {
 
   name: 'App',
   components: {
+    Player,
     SideNavBar,
     Footer,
     TopNavBar,
