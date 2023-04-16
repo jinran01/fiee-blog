@@ -11,19 +11,19 @@
       <!--      <el-button type="primary"  @click="searchRole">添加角色</el-button>-->
       <el-form-item>
         <el-button type="danger" @click="openMsgBoxDel" :disabled="flag">
-          <template #default v-if="getBodyWidth < 667">
-            <el-icon v-if="getBodyWidth < 667">
+          <template #default v-if="getBodyWidth <= 667">
+            <el-icon v-if="getBodyWidth <= 667">
               <Delete />
             </el-icon>
           </template>
-          <template #default>
+          <template #default v-else>
             <el-icon>
               <Delete/>
             </el-icon>
             批量删除
           </template>
         </el-button>
-        <el-button type="success" @click="openMsgBoxRe([],1)" v-if="getBodyWidth > 667" :disabled="flag">
+        <el-button type="success" @click="openMsgBoxRe" v-if="getBodyWidth > 667" :disabled="flag">
           <template #default>
             <el-icon><Check /></el-icon>
             批量通过
@@ -81,7 +81,7 @@
       </el-table-column>
       <el-table-column label="操作" fixed="right" :width="getBodyWidth <= 667 ? '160' : ''" align="center">
         <template #default="scope">
-          <el-button size="small" type="success" plain v-if="scope.row.isReview == 0" @click="review">
+          <el-button size="small" type="success" plain v-if="scope.row.isReview == 0" @click="doReviewMsg(scope.row.id,1)">
             <el-icon>
               <Check />
             </el-icon>
@@ -111,7 +111,7 @@
     </el-table>
     <el-pagination
         background
-        layout="prev,pager,next"
+        :layout="getBodyWidth >= 667 ? 'prev,pager,next' : 'prev,next,jumper'"
         @current-change="pageChange"
         :page-size=pageInfo.size
         :total="count"
@@ -124,7 +124,7 @@ import {computed, onMounted, reactive, ref, toRefs} from "vue";
 import {Search,InfoFilled} from "@element-plus/icons-vue";
 import {formatDate} from "@/common/js/formatDate";
 import store from "@/store";
-import {delMessages, getMessages} from "@/network/message";
+import {delMessages, getMessages, reviewMessages} from "@/network/message";
 import {ElMessage, ElMessageBox} from "element-plus";
 
 export default {
@@ -137,7 +137,7 @@ export default {
     let state = reactive({
       count:0,
       bodyWidth:0,
-      flag:true
+      flag:true,
     })
     let pageInfo = {
       current:1,
@@ -160,6 +160,7 @@ export default {
         doDelMessage([],1)
       })
     }
+    //执行删除操作
     const doDelMessage = (ids,flag) => {
       if (flag == 2){
         selectMessagesList.value = []
@@ -175,11 +176,22 @@ export default {
         }
       })
     }
-    // //单删
-    // const delMessage = (data) => {
-    //   let id = data
-    //   doDelMessage(id)
-    // }
+    //执行审核操作
+    const doReviewMsg = (ids,flag) => {
+      if (flag == 1){
+        selectMessagesList.value = []
+        selectMessagesList.value.push(ids)
+      }
+      reviewMessages(selectMessagesList.value).then(res=>{
+        if (res.flag){
+          ElMessage({
+            type:'success',
+            message:'操作成功'
+          })
+          getMessageList(pageInfo)
+        }
+      })
+    }
     //打开留言审核确认框
     const openMsgBoxRe = () => {
       ElMessageBox.confirm(
@@ -192,7 +204,7 @@ export default {
           }
       ).then(() => {
         //批量确认
-        deleteLinks([],1)
+        doReviewMsg([],2)
       })
     }
 
@@ -259,6 +271,7 @@ export default {
       selectMessages,
       openMsgBoxRe,
       doDelMessage,
+      doReviewMsg,
       nickname,
       reviewType,
       getBodyWidth,

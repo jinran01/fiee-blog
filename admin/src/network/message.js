@@ -18,10 +18,10 @@ export function delMessages(ids) {
 }
 
 //审核留言
-export function reviewMessages(data) {
+export function reviewMessages(ids) {
   return request({
-    url:'admin/messages',
+    url:'admin/messages/review',
     method:'PUT',
-    data
+    data:ids
   })
 }
