@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build"
   },
   "dependencies": {
@@ -12,6 +12,7 @@
     "core-js": "^3.8.3",
     "element-plus": "^2.2.32",
     "jquery": "^3.6.4",
+    "recorderx": "^2.0.2",
     "roboto-fontface": "*",
     "vue": "^3.2.13",
     "vue-danmaku": "^1.7.0",

@@ -97,6 +97,7 @@
                     round
                     @close="handleClose(item)"
                     :type=randomType()
+                    style="cursor:pointer"
                     @click="goTo(item)">
               {{ item.name }}
             </el-tag>

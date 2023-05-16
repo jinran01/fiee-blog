@@ -14,12 +14,17 @@ import * as echarts from './utils/echarts'
 import './assets/icons/blogicon/iconfont.css'
 import './assets/css/global.less'
 
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+
 const app = createApp(App)
 app.config.globalProperties.$echarts = echarts
-app.use(ElementPlus,{locale})
+app.use(ElementPlus,{locale}).use(mavonEditor)
     .use(store).use(router)
     .mount('#app')
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
+
+
 

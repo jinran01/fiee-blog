@@ -421,7 +421,7 @@ export default {
 .main_form {
   width: 100%;
   margin-top: 18px;
-
+  //display: block;
   .el-form-item:first-child {
     margin-left: 7px;
     float: left;

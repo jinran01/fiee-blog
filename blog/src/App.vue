@@ -9,7 +9,10 @@
     </v-main>
     <Footer ></Footer>
     <BackTop></BackTop>
+    <!-- 音乐播放器 -->
     <Player></Player>
+    <!-- 聊天室 -->
+    <ChatRoom></ChatRoom>
   </v-app>
 </template>
 
@@ -26,12 +29,14 @@ import {clickEffect} from "@/common/js/onClick"; //鼠标点击特效
 import {ElMessage} from "element-plus";
 import SideNavBar from "@/components/layout/SideNavBar";
 import Player from "@/components/zw-player/Player";
+import ChatRoom from "@/components/ChatRoom";
 
 
 export default {
 
   name: 'App',
   components: {
+    ChatRoom,
     Player,
     SideNavBar,
     Footer,
